@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class StudentService
 {
     private List<Student> students = new List<Student>();
+    private List<Student> foundStudents = new List<Student>();
 
     public void AddStudent()
 	{
@@ -28,8 +29,6 @@ public class StudentService
 
         students.Add(student);
         Console.WriteLine("\nStudent added successfully!");
-
-        students.Add(student);
     }
     public void ViewStudent()
     {
@@ -49,11 +48,79 @@ public class StudentService
     }
     public void SearchStudent()
     {
+        if (students == null || students.Count == 0)
+        {
+            Console.WriteLine("No student records found.");
+            return;
+        }
 
+        int searchId = ReadIntInput("Enter the Student ID to search: ");
+        var student = students.Find(s => s.StudentId == searchId);
+        if (student != null)
+        {
+            Console.WriteLine($"ID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+            }
     }
     public void UpdateStudent()
     {
+        if (students == null || students.Count == 0)
+        {
+            Console.WriteLine("No student records found.");
+            return;
+        }
+        int searchId = ReadIntInput("Enter the Student ID to search: ");
+        var student = students.Find(s => s.StudentId == searchId);
+        if (student != null)
+        {
+            Console.WriteLine("Updating student information...");
+            Console.WriteLine("Which specific field would you like to update?");
+            Console.WriteLine("1. First Name");
+            Console.WriteLine("2. Last Name");
+            Console.WriteLine("3. Age");
+            Console.WriteLine("4. Grade Level");
+            Console.WriteLine("5. Section");
+            Console.Write("Enter your choice: ");
 
+            if (int.TryParse(Console.ReadLine(), out int fieldChoice))
+            {
+                Console.WriteLine($"Updating record for Student ID: {student.StudentId}\n");
+                switch (fieldChoice)
+                {
+                    case 1:
+                        Console.Write("Enter new first name: ");
+                        student.FirstName = Console.ReadLine();
+                        break;
+                    case 2:
+                        Console.Write("Enter new last name: ");
+                        student.LastName = Console.ReadLine();
+                        break;
+                    case 3:
+                        student.Age = ReadIntInput("Enter new age: ");
+                        break;
+                    case 4:
+                        student.GradeLevel = ReadStringInput("Enter new grade level: ");
+                        break;
+                    case 5:
+                        student.Section = ReadStringInput("Enter new section: ");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
     }
     public void DeleteStudent()
     {
