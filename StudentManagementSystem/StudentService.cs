@@ -4,32 +4,39 @@ using System.Collections.Generic;
 public class StudentService
 {
     private List<Student> students = new List<Student>();
-    private List<Student> foundStudents = new List<Student>();
 
     public void AddStudent()
-	{
+    {
         Student student = new Student();
 
-        Console.WriteLine("");
-        Console.WriteLine("Adding a new student...");
-        Console.WriteLine("");
+        Console.WriteLine("\nAdding a new student...\n");
 
-        student.StudentId = ReadIntInput("Student Id: ");
+        // Check if the student ID already exists in the list of students. If it does, prompt the user to enter a different ID.
+        while (true)
+        {
+            int id = ReadIntInput("Student Id: ");
+            if (students.Exists(s => s.StudentId == id))
+            {
+                Console.WriteLine("A student with this ID already exists. Please try a different ID.\n");
+            }
+            else
+            {
+                student.StudentId = id;
+                break;
+            }
+        }
 
-        Console.Write("First name: ");
-        student.FirstName = Console.ReadLine();
-
-        Console.Write("Last name: ");
-        student.LastName = Console.ReadLine();
-
+        student.FirstName = ReadStringInput("First name: ");
+        student.LastName = ReadStringInput("Last name: ");
         student.Age = ReadIntInput("Age: ");
         student.GradeLevel = ReadStringInput("Grade Level: ");
-
         student.Section = ReadStringInput("Section: ");
 
         students.Add(student);
         Console.WriteLine("\nStudent added successfully!");
     }
+
+    // The ViewStudent method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
     public void ViewStudent()
     {
         if (students == null || students.Count == 0)
@@ -37,15 +44,15 @@ public class StudentService
             Console.WriteLine("No student records found.");
             return;
         }
-        else
+
+        Console.WriteLine("\nStudent Records:");
+        foreach (var student in students)
         {
-            Console.WriteLine("Student Records:");
-            foreach (var student in students)
-            {
-                Console.WriteLine($"ID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
-            }
-        }   
+            Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+        }
     }
+
+    // The SearchStudent method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
     public void SearchStudent()
     {
         if (students == null || students.Count == 0)
@@ -54,17 +61,20 @@ public class StudentService
             return;
         }
 
-        int searchId = ReadIntInput("Enter the Student ID to search: ");
+        int searchId = ReadIntInput("\nEnter the Student ID to search: ");
         var student = students.Find(s => s.StudentId == searchId);
+
         if (student != null)
         {
-            Console.WriteLine($"ID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+            Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
         }
         else
         {
             Console.WriteLine("Student not found.");
-            }
+        }
     }
+
+    // The UpdateStudent method will allow the user to update specific fields of a student's record. The user will be prompted to select which field they want to update, and then they can enter the new value for that field. If the student is not found, a message will be displayed.
     public void UpdateStudent()
     {
         if (students == null || students.Count == 0)
@@ -72,49 +82,48 @@ public class StudentService
             Console.WriteLine("No student records found.");
             return;
         }
+
         int searchId = ReadIntInput("Enter the Student ID to search: ");
         var student = students.Find(s => s.StudentId == searchId);
+
         if (student != null)
         {
-            Console.WriteLine("Updating student information...");
-            Console.WriteLine("Which specific field would you like to update?");
+            Console.WriteLine("\nUpdating student information...");
+            Console.WriteLine("\nWhich specific field would you like to update?\n");
             Console.WriteLine("1. First Name");
             Console.WriteLine("2. Last Name");
             Console.WriteLine("3. Age");
             Console.WriteLine("4. Grade Level");
             Console.WriteLine("5. Section");
-            Console.Write("Enter your choice: ");
 
-            if (int.TryParse(Console.ReadLine(), out int fieldChoice))
+            int fieldChoice = ReadIntInput("\nEnter your choice: ");
+            Console.WriteLine($"\nUpdating record for Student ID: {student.StudentId}\n");
+
+            switch (fieldChoice)
             {
-                Console.WriteLine($"Updating record for Student ID: {student.StudentId}\n");
-                switch (fieldChoice)
-                {
-                    case 1:
-                        Console.Write("Enter new first name: ");
-                        student.FirstName = Console.ReadLine();
-                        break;
-                    case 2:
-                        Console.Write("Enter new last name: ");
-                        student.LastName = Console.ReadLine();
-                        break;
-                    case 3:
-                        student.Age = ReadIntInput("Enter new age: ");
-                        break;
-                    case 4:
-                        student.GradeLevel = ReadStringInput("Enter new grade level: ");
-                        break;
-                    case 5:
-                        student.Section = ReadStringInput("Enter new section: ");
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice.");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice.");
+                case 1:
+                    student.FirstName = ReadStringInput("Enter new first name: ");
+                    Console.WriteLine("\nFirst name updated successfully.");
+                    break;
+                case 2:
+                    student.LastName = ReadStringInput("Enter new last name: ");
+                    Console.WriteLine("\nLast name updated successfully.");
+                    break;
+                case 3:
+                    student.Age = ReadIntInput("Enter new age: ");
+                    Console.WriteLine("\nAge updated successfully.");
+                    break;
+                case 4:
+                    student.GradeLevel = ReadStringInput("Enter new grade level: ");
+                    Console.WriteLine("\nGrade level updated successfully.");
+                    break;
+                case 5:
+                    student.Section = ReadStringInput("Enter new section: ");
+                    Console.WriteLine("\nSection updated successfully.");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice.");
+                    break;
             }
         }
         else
@@ -122,10 +131,41 @@ public class StudentService
             Console.WriteLine("Student not found.");
         }
     }
+
+    // The DeleteStudent method will allow the user to delete a student's record by their ID. If the student is found, the user will be asked to confirm the deletion. If confirmed, the student will be removed from the list; otherwise, the deletion will be canceled. If the student is not found, a message will be displayed.
     public void DeleteStudent()
     {
+        if (students == null || students.Count == 0)
+        {
+            Console.WriteLine("No student records found.");
+            return;
+        }
 
+        int searchId = ReadIntInput("Enter the Student ID to delete: ");
+        var student = students.Find(s => s.StudentId == searchId);
+
+        if (student != null)
+        {
+            Console.Write("Are you sure you want to delete this student? (y/n): ");
+            string confirm = Console.ReadLine();
+
+            if (confirm?.ToLower() == "y")
+            {
+                students.Remove(student);
+                Console.WriteLine("Student deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Deletion cancelled.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
     }
+
+
     // For the ReadIntInput method, we will ensure that the user cannot enter a non-integer value for the student ID and age.
     private int ReadIntInput(string prompt)
     {
@@ -141,6 +181,7 @@ public class StudentService
             Console.WriteLine("Invalid input. Please enter a valid integer.\n");
         }
     }
+
     // For the ReadStringInput method, we will ensure that the user cannot enter an empty string for the section.
     // If the user tries to do so, we will prompt them again until they provide a valid input.
     private string ReadStringInput(string prompt)
@@ -153,10 +194,10 @@ public class StudentService
             // Check that the user didn't just press Enter on an empty line
             if (!string.IsNullOrWhiteSpace(input))
             {
-                return input.Trim(); // Removes extra leading or trailing spaces
+                return input.Trim();
             }
 
-            Console.WriteLine("Invalid input. Section cannot be empty.\n");
+            Console.WriteLine("Invalid input. Input cannot be empty.\n");
         }
     }
 }
