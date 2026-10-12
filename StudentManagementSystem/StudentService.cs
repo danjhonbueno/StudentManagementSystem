@@ -14,7 +14,7 @@ public class StudentService
         // Check if the student ID already exists in the list of students. If it does, prompt the user to enter a different ID.
         while (true)
         {
-            int id = ReadIntInput("Student Id: ");
+            int id = ReadIntInput("Student Id: ", 1, 9999);
             if (students.Exists(s => s.StudentId == id))
             {
                 Console.WriteLine("A student with this ID already exists. Please try a different ID.\n");
@@ -28,7 +28,7 @@ public class StudentService
 
         student.FirstName = ReadStringInput("First name: ");
         student.LastName = ReadStringInput("Last name: ");
-        student.Age = ReadIntInput("Age: ");
+        student.Age = ReadIntInput("Age: ", 1,100);
         student.GradeLevel = ReadStringInput("Grade Level: ");
         student.Section = ReadStringInput("Section: ");
 
@@ -110,7 +110,7 @@ public class StudentService
                     Console.WriteLine("\nLast name updated successfully.");
                     break;
                 case 3:
-                    student.Age = ReadIntInput("Enter new age: ");
+                    student.Age = ReadIntInput("Enter new age: ", 1, 100);
                     Console.WriteLine("\nAge updated successfully.");
                     break;
                 case 4:
@@ -167,7 +167,7 @@ public class StudentService
 
 
     // For the ReadIntInput method, we will ensure that the user cannot enter a non-integer value for the student ID and age.
-    private int ReadIntInput(string prompt)
+    private int ReadIntInput(string prompt, int minValue = int.MinValue, int maxValue = int.MaxValue)
     {
         int value;
         while (true)
@@ -175,10 +175,19 @@ public class StudentService
             Console.Write(prompt);
             if (int.TryParse(Console.ReadLine(), out value))
             {
-                return value;
+                if (value >= minValue && value <= maxValue)
+                {
+                    return value;
+                }
+                else
+                {
+                    Console.WriteLine($"Input out of range. Please enter a value between {minValue} and {maxValue}.\n");
+                }
             }
-
-            Console.WriteLine("Invalid input. Please enter a valid integer.\n");
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid integer.\n");
+            }
         }
     }
 
