@@ -26,8 +26,8 @@ public class StudentService
             }
         }
 
-        student.FirstName = ReadStringInput("First name: ");
-        student.LastName = ReadStringInput("Last name: ");
+        student.FirstName = ReadNameInput("First name: ");
+        student.LastName = ReadNameInput("Last name: ");
         student.Age = ReadIntInput("Age: ", 1,100);
         student.GradeLevel = ReadStringInput("Grade Level: ");
         student.Section = ReadStringInput("Section: ");
@@ -96,17 +96,17 @@ public class StudentService
             Console.WriteLine("4. Grade Level");
             Console.WriteLine("5. Section");
 
-            int fieldChoice = ReadIntInput("\nEnter your choice: ");
+            int fieldChoice = ReadIntInput("\nEnter your choice: ", 1, 5);
             Console.WriteLine($"\nUpdating record for Student ID: {student.StudentId}\n");
 
             switch (fieldChoice)
             {
                 case 1:
-                    student.FirstName = ReadStringInput("Enter new first name: ");
+                    student.FirstName = ReadNameInput("Enter new first name: ");
                     Console.WriteLine("\nFirst name updated successfully.");
                     break;
                 case 2:
-                    student.LastName = ReadStringInput("Enter new last name: ");
+                    student.LastName = ReadNameInput("Enter new last name: ");
                     Console.WriteLine("\nLast name updated successfully.");
                     break;
                 case 3:
@@ -201,12 +201,46 @@ public class StudentService
             string input = Console.ReadLine();
 
             // Check that the user didn't just press Enter on an empty line
-            if (!string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrWhiteSpace(input))
             {
-                return input.Trim();
+                Console.WriteLine("Input cannot be empty.\n");
+                continue;
+            }
+            input = input.Trim();
+            return input;
+        }
+    }
+
+    private string ReadNameInput(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+
+            // Check that the user didn't just press Enter on an empty line
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Input cannot be empty.\n");
+                continue;
             }
 
-            Console.WriteLine("Invalid input. Input cannot be empty.\n");
+            bool isValid = true;
+            foreach (char c in input)
+            {
+                if (!char.IsLetter(c) && c != ' ')
+                {
+                    Console.WriteLine("Input can only contain letters and spaces.\n");
+                    isValid = false;
+                    break;
+                }
+            }
+            if (!isValid)
+            {
+                continue;
+            }
+            input = input.Trim();
+            return input;
         }
     }
 }
