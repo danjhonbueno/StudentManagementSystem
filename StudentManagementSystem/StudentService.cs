@@ -48,7 +48,7 @@ public class StudentService
         Console.WriteLine("\nStudent Records:");
         foreach (var student in students)
         {
-            Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+            DisplayStudentDetails(student);
         }
     }
 
@@ -66,7 +66,7 @@ public class StudentService
 
         if (student != null)
         {
-            Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+            DisplayStudentDetails(student);
         }
         else
         {
@@ -242,5 +242,10 @@ public class StudentService
             input = input.Trim();
             return input;
         }
+    }
+
+    private void DisplayStudentDetails(Student student)
+    {
+        Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
     }
 }
