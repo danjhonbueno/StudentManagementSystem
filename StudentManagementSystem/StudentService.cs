@@ -36,8 +36,8 @@ public class StudentService
         Console.WriteLine("\nStudent added successfully!");
     }
 
-    // The ViewStudent method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
-    public void ViewStudent()
+    // The ListAll method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
+    public void ListAll()
     {
         if (students == null || students.Count == 0)
         {
@@ -52,8 +52,8 @@ public class StudentService
         }
     }
 
-    // The SearchStudent method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
-    public void SearchStudent()
+    // The FindById method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
+    public void FindById()
     {
         if (students == null || students.Count == 0)
         {
@@ -120,9 +120,6 @@ public class StudentService
                 case 5:
                     student.Section = ReadStringInput("Enter new section: ");
                     Console.WriteLine("\nSection updated successfully.");
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice.");
                     break;
             }
         }
