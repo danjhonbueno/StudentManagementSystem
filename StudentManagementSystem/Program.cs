@@ -1,7 +1,4 @@
-﻿using System;
-using StudentManagementSystem;
-
-namespace StudentManagementSystem
+﻿namespace StudentManagementSystem
 {
     class Program
     {

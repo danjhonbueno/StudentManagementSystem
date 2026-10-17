@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace StudentManagementSystem;
 
 public class StudentService
 {
@@ -29,8 +28,8 @@ public class StudentService
         student.FirstName = ReadNameInput("First name: ");
         student.LastName = ReadNameInput("Last name: ");
         student.Age = ReadIntInput("Age: ", 1,100);
-        student.GradeLevel = ReadStringInput("Grade Level: ");
-        student.Section = ReadStringInput("Section: ");
+        student.GradeLevel = ReadRequiredText("Grade Level: ");
+        student.Section = ReadRequiredText("Section: ");
 
         students.Add(student);
         Console.WriteLine("\nStudent added successfully!");
@@ -39,7 +38,7 @@ public class StudentService
     // The ListAll method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
     public void ListAll()
     {
-        if (students == null || students.Count == 0)
+        if (students.Count == 0)
         {
             Console.WriteLine("No student records found.");
             return;
@@ -55,7 +54,7 @@ public class StudentService
     // The FindById method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
     public void FindById()
     {
-        if (students == null || students.Count == 0)
+        if (students.Count == 0)
         {
             Console.WriteLine("No student records found.");
             return;
@@ -77,7 +76,7 @@ public class StudentService
     // The UpdateStudent method will allow the user to update specific fields of a student's record. The user will be prompted to select which field they want to update, and then they can enter the new value for that field. If the student is not found, a message will be displayed.
     public void UpdateStudent()
     {
-        if (students == null || students.Count == 0)
+        if (students.Count == 0)
         {
             Console.WriteLine("No student records found.");
             return;
@@ -114,11 +113,11 @@ public class StudentService
                     Console.WriteLine("\nAge updated successfully.");
                     break;
                 case 4:
-                    student.GradeLevel = ReadStringInput("Enter new grade level: ");
+                    student.GradeLevel = ReadRequiredText("Enter new grade level: ");
                     Console.WriteLine("\nGrade level updated successfully.");
                     break;
                 case 5:
-                    student.Section = ReadStringInput("Enter new section: ");
+                    student.Section = ReadRequiredText("Enter new section: ");
                     Console.WriteLine("\nSection updated successfully.");
                     break;
             }
@@ -132,7 +131,7 @@ public class StudentService
     // The DeleteStudent method will allow the user to delete a student's record by their ID. If the student is found, the user will be asked to confirm the deletion. If confirmed, the student will be removed from the list; otherwise, the deletion will be canceled. If the student is not found, a message will be displayed.
     public void DeleteStudent()
     {
-        if (students == null || students.Count == 0)
+        if (students.Count == 0)
         {
             Console.WriteLine("No student records found.");
             return;
@@ -190,7 +189,7 @@ public class StudentService
 
     // For the ReadStringInput method, we will ensure that the user cannot enter an empty string for the section.
     // If the user tries to do so, we will prompt them again until they provide a valid input.
-    private string ReadStringInput(string prompt)
+    private string ReadRequiredText(string prompt)
     {
         while (true)
         {
@@ -225,9 +224,9 @@ public class StudentService
             bool isValid = true;
             foreach (char c in input)
             {
-                if (!char.IsLetter(c) && c != ' ')
+                if (!char.IsLetter(c) && c != ' ' && c != '-' && c != '\'')
                 {
-                    Console.WriteLine("Input can only contain letters and spaces.\n");
+                    Console.WriteLine("Input can only contain letters, spaces, hyphens, and apostrophes.\n");
                     isValid = false;
                     break;
                 }

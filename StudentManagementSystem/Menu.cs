@@ -1,5 +1,14 @@
-﻿using System;
-using StudentManagementSystem;
+﻿namespace StudentManagementSystem
+{
+    public class Program
+    {
+        static void Main()
+        {
+            Menu menu = new Menu();
+            menu.DisplayMenu();
+        }
+    }
+}
 
 namespace StudentManagementSystem
 {
@@ -34,10 +43,10 @@ namespace StudentManagementSystem
                         studentService.AddStudent();
                         break;
                     case 2:
-                        studentService.ViewStudent();
+                        studentService.ListAll();
                         break;
                     case 3:
-                        studentService.SearchStudent();
+                        studentService.FindById();
                         break;
                     case 4:
                         studentService.UpdateStudent();
