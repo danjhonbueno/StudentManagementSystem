@@ -1,17 +1,5 @@
 ﻿namespace StudentManagementSystem
 {
-    public class Program
-    {
-        static void Main()
-        {
-            Menu menu = new Menu();
-            menu.DisplayMenu();
-        }
-    }
-}
-
-namespace StudentManagementSystem
-{
     public class Menu
     {
         private StudentService studentService = new StudentService();
