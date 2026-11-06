@@ -2,7 +2,12 @@
 {
     public class Menu
     {
-        private StudentService studentService = new StudentService();
+        private readonly StudentService studentService;
+
+        public Menu(StudentService studentService)
+        {
+            this.studentService = studentService;
+        }
 
         public void DisplayMenu()
         {

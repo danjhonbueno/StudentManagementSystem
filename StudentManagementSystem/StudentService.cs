@@ -1,4 +1,5 @@
 ﻿namespace StudentManagementSystem;
+using StudentManagementSystem.Repositories;
 
 public class StudentService
 {
@@ -243,5 +244,12 @@ public class StudentService
     private void DisplayStudentDetails(Student student)
     {
         Console.WriteLine($"\nID: {student.StudentId}, Name: {student.FirstName} {student.LastName}, Age: {student.Age}, Grade Level: {student.GradeLevel}, Section: {student.Section}");
+    }
+
+    private readonly StudentRepository _studentRepository;
+
+    public StudentService(StudentRepository studentRepository)
+    {
+        _studentRepository = studentRepository;
     }
 }
