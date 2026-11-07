@@ -37,8 +37,9 @@ public class StudentService
     }
 
     // The ListAll method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
-    public void ListAll()
+    public async Task ListAll()
     {
+        var students = await GetAllStudentsAsync();
         if (students.Count == 0)
         {
             Console.WriteLine("No student records found.");
@@ -162,6 +163,11 @@ public class StudentService
         }
     }
 
+    // The GetAllStudentsAsync method will retrieve all student records from the database asynchronously using the StudentRepository. It will return a list of Student objects.
+    public async Task<List<Student>> GetAllStudentsAsync()
+    {
+        return await _studentRepository.GetAllStudentsAsync();
+    }
 
     // For the ReadIntInput method, we will ensure that the user cannot enter a non-integer value for the student ID and age.
     private int ReadIntInput(string prompt, int minValue = int.MinValue, int maxValue = int.MaxValue)
@@ -251,5 +257,6 @@ public class StudentService
     public StudentService(StudentRepository studentRepository)
     {
         _studentRepository = studentRepository;
+
     }
 }

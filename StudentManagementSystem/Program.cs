@@ -10,8 +10,7 @@ namespace StudentManagementSystem
             string connectionString =
                 "Host=localhost;Port=5432;Database=student_management_db;Username=postgres;Password=10272821";
 
-            await using var dataSource =
-                NpgsqlDataSource.Create(connectionString);
+            await using var dataSource = NpgsqlDataSource.Create(connectionString);
 
             try
             {
