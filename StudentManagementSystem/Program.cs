@@ -34,6 +34,8 @@ namespace StudentManagementSystem
             catch (NpgsqlException ex)
             {
                 Console.WriteLine($"Database connection failed: {ex.Message}");
+                Console.WriteLine("Press Enter to close...");
+                Console.ReadLine();
                 return;
             }
 
@@ -45,7 +47,7 @@ namespace StudentManagementSystem
 
             Menu menu = new Menu(service);
 
-            menu.DisplayMenu();
+            await menu.DisplayMenu();
         }
     }
 }

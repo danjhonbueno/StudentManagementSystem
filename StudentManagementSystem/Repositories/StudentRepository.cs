@@ -14,17 +14,14 @@ namespace StudentManagementSystem.Repositories
         // This method retrieves all student records from the database asynchronously.
         public async Task<List<Student>> GetAllStudentsAsync()
         {
-            // Open a connection to the PostgreSQL database using the provided data source.
+
             await using var connection =
                 await _dataSource.OpenConnectionAsync();
 
-            // Define the SQL query to select all records from the "students" table.
             string selectAllStudentsQuery = "SELECT * FROM students;";
 
-            // Create a command to execute the SQL query against the database.
             await using var command = new NpgsqlCommand(selectAllStudentsQuery, connection);
 
-            // Execute the command and obtain a reader to read the results asynchronously.
             await using var reader = await command.ExecuteReaderAsync();
 
             // Initialize a list to hold the retrieved student records.
@@ -34,27 +31,60 @@ namespace StudentManagementSystem.Repositories
             while (await reader.ReadAsync())
             {
                 // Access the values from the current row.
-                var student_id = reader.GetInt32(reader.GetOrdinal("student_id"));
-                var first_name = reader.GetString(reader.GetOrdinal("first_name"));
-                var last_name = reader.GetString(reader.GetOrdinal("last_name"));
+                var studentId = reader.GetInt32(reader.GetOrdinal("student_id"));
+                var firstName = reader.GetString(reader.GetOrdinal("first_name"));
+                var lastName = reader.GetString(reader.GetOrdinal("last_name"));
                 var age = reader.GetInt32(reader.GetOrdinal("age"));
-                var grade_level = reader.GetString(reader.GetOrdinal("grade_level"));
+                var gradeLevel = reader.GetString(reader.GetOrdinal("grade_level"));
                 var section = reader.GetString(reader.GetOrdinal("section"));
 
                 // Create a new Student object and populate it with the retrieved values.
                 var student = new Student
                 {
-                    StudentId = student_id,
-                    FirstName = first_name,
-                    LastName = last_name,
+                    StudentId = studentId,
+                    FirstName = firstName,
+                    LastName = lastName,
                     Age = age,
-                    GradeLevel = grade_level,
+                    GradeLevel = gradeLevel,
                     Section = section
                 };
                 students.Add(student);
             }
             return students;
         }
+
+        public async Task<Student?> GetStudentByIdAsync(int studentId)
+        {
+            await using var connection =
+                await _dataSource.OpenConnectionAsync();
+
+            string selectStudentByIdQuery |= "SELECT student_id, first_name, last_name, age, grade_level, section\r\nFROM students\r\nWHERE student_id = @studentId;";
+
+            await using var command = new NpgsqlCommand(selectStudentByIdQuery, connection);
+            command.Parameters.AddWithValue("studentId", studentId);
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                var student = new Student
+                {
+                    StudentId = reader.GetInt32(reader.GetOrdinal("student_id")),
+                    FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                    LastName = reader.GetString(reader.GetOrdinal("last_name")),
+                    Age = reader.GetInt32(reader.GetOrdinal("age")),
+                    GradeLevel = reader.GetString(reader.GetOrdinal("grade_level")),
+                    Section = reader.GetString(reader.GetOrdinal("section"))
+                };
+                return student;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
     }
 
 

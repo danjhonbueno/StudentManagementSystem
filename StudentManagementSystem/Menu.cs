@@ -9,7 +9,7 @@
             this.studentService = studentService;
         }
 
-        public void DisplayMenu()
+        public async Task DisplayMenu()
         {
             bool running = true;
 
@@ -36,7 +36,7 @@
                         studentService.AddStudent();
                         break;
                     case 2:
-                        studentService.ListAll();
+                        await studentService.ListAll();
                         break;
                     case 3:
                         studentService.FindById();
