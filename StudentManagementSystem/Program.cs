@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using StudentManagementSystem.Repositories;
 
 namespace StudentManagementSystem
@@ -7,10 +8,21 @@ namespace StudentManagementSystem
     {
         static async Task Main()
         {
-            string connectionString =
-                "Host=localhost;Port=5432;Database=student_management_db;Username=postgres;Password=10272821";
+            // Load configuration from user secrets to retrieve the database connection string.
+            var configuration = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
 
-            await using var dataSource = NpgsqlDataSource.Create(connectionString);
+            string? connectionString =
+                configuration.GetConnectionString("StudentDatabase");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                Console.WriteLine("Database connection string is missing.");
+                return;
+            }
+
+            await using var dataSource =  NpgsqlDataSource.Create(connectionString);
 
             try
             {
