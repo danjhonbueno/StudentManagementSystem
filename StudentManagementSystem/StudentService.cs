@@ -54,16 +54,10 @@ public class StudentService
     }
 
     // The FindById method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
-    public void FindById()
+    public async Task FindById()
     {
-        if (students.Count == 0)
-        {
-            Console.WriteLine("No student records found.");
-            return;
-        }
-
         int searchId = ReadIntInput("\nEnter the Student ID to search: ");
-        var student = students.Find(s => s.StudentId == searchId);
+        var student = await _studentRepository.GetStudentByIdAsync(searchId);
 
         if (student != null)
         {
@@ -76,16 +70,10 @@ public class StudentService
     }
 
     // The UpdateStudent method will allow the user to update specific fields of a student's record. The user will be prompted to select which field they want to update, and then they can enter the new value for that field. If the student is not found, a message will be displayed.
-    public void UpdateStudent()
+    public async Task<bool> UpdateStudent()
     {
-        if (students.Count == 0)
-        {
-            Console.WriteLine("No student records found.");
-            return;
-        }
-
         int searchId = ReadIntInput("Enter the Student ID to search: ");
-        var student = students.Find(s => s.StudentId == searchId);
+        var student = await _studentRepository.GetStudentByIdAsync(searchId);
 
         if (student != null)
         {
@@ -104,29 +92,36 @@ public class StudentService
             {
                 case 1:
                     student.FirstName = ReadNameInput("Enter new first name: ");
-                    Console.WriteLine("\nFirst name updated successfully.");
                     break;
                 case 2:
                     student.LastName = ReadNameInput("Enter new last name: ");
-                    Console.WriteLine("\nLast name updated successfully.");
                     break;
                 case 3:
                     student.Age = ReadIntInput("Enter new age: ", 1, 100);
-                    Console.WriteLine("\nAge updated successfully.");
                     break;
                 case 4:
                     student.GradeLevel = ReadRequiredText("Enter new grade level: ");
-                    Console.WriteLine("\nGrade level updated successfully.");
                     break;
                 case 5:
                     student.Section = ReadRequiredText("Enter new section: ");
-                    Console.WriteLine("\nSection updated successfully.");
                     break;
             }
+
+            bool isUpdated = await _studentRepository.UpdateStudentAsync(student);
+
+            if (!isUpdated)
+            {
+                Console.WriteLine("Failed to update student.");
+                return false;
+            }
+
+            Console.WriteLine("Student updated successfully.");
+            return true;
         }
         else
         {
             Console.WriteLine("Student not found.");
+            return false;
         }
     }
 

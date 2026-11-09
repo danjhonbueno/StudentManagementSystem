@@ -58,7 +58,7 @@ namespace StudentManagementSystem.Repositories
             await using var connection =
                 await _dataSource.OpenConnectionAsync();
 
-            string selectStudentByIdQuery |= "SELECT student_id, first_name, last_name, age, grade_level, section\r\nFROM students\r\nWHERE student_id = @studentId;";
+            string selectStudentByIdQuery = "SELECT student_id, first_name, last_name, age, grade_level, section\r\nFROM students\r\nWHERE student_id = @studentId;";
 
             await using var command = new NpgsqlCommand(selectStudentByIdQuery, connection);
             command.Parameters.AddWithValue("studentId", studentId);
@@ -82,6 +82,27 @@ namespace StudentManagementSystem.Repositories
             {
                 return null;
             }
+
+        }
+
+        public async Task<bool> UpdateStudentAsync(Student student)
+        {
+            await using var connection =
+                await _dataSource.OpenConnectionAsync();
+
+            string updateStudentQuery = "UPDATE students SET first_name = @firstName, last_name = @lastName, age = @age, grade_level = @gradeLevel, section = @section WHERE student_id = @studentId;";
+
+            await using var command = new NpgsqlCommand(updateStudentQuery, connection);
+
+            command.Parameters.AddWithValue("firstName", student.FirstName);
+            command.Parameters.AddWithValue("lastName", student.LastName);
+            command.Parameters.AddWithValue("age", student.Age);
+            command.Parameters.AddWithValue("gradeLevel", student.GradeLevel);
+            command.Parameters.AddWithValue("section", student.Section);
+            command.Parameters.AddWithValue("studentId", student.StudentId);
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
 
         }
 

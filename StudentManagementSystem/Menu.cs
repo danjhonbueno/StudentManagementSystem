@@ -39,10 +39,10 @@
                         await studentService.ListAll();
                         break;
                     case 3:
-                        studentService.FindById();
+                        await studentService.FindById();
                         break;
                     case 4:
-                        studentService.UpdateStudent();
+                        await studentService.UpdateStudent();
                         break;
                     case 5:
                         studentService.DeleteStudent();
