@@ -106,6 +106,34 @@ namespace StudentManagementSystem.Repositories
 
         }
 
+        public async Task<bool> DeleteStudentAsync(int studentId)
+        {
+            await using var connection =
+                await _dataSource.OpenConnectionAsync();
+
+            string deleteStudentQuery = "DELETE FROM students WHERE student_id = @studentId;";
+
+            await using var command = new NpgsqlCommand(deleteStudentQuery, connection);
+            command.Parameters.AddWithValue("studentId", studentId);
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+        }
+
+        public async Task<int> AddStudentAsync(Student student)
+        {
+            await using var connection =
+                await _dataSource.OpenConnectionAsync();
+            string insertStudentQuery = "INSERT INTO students (first_name, last_name, age, grade_level, section) VALUES (@firstName, @lastName, @age, @gradeLevel, @section) RETURNING student_id;";
+            await using var command = new NpgsqlCommand(insertStudentQuery, connection);
+            command.Parameters.AddWithValue("firstName", student.FirstName);
+            command.Parameters.AddWithValue("lastName", student.LastName);
+            command.Parameters.AddWithValue("age", student.Age);
+            command.Parameters.AddWithValue("gradeLevel", student.GradeLevel);
+            command.Parameters.AddWithValue("section", student.Section);
+            int studentId = Convert.ToInt32(await command.ExecuteScalarAsync());
+            return studentId;
+        }
     }
 
 

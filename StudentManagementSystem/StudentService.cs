@@ -3,28 +3,12 @@ using StudentManagementSystem.Repositories;
 
 public class StudentService
 {
-    private List<Student> students = new List<Student>();
-
-    public void AddStudent()
+    // The AddStudent method will prompt the user to enter details for a new student, create a Student object, and then call the repository to add the student to the database. It will also display a confirmation message with the new student's ID.
+    public async Task AddStudent()
     {
         Student student = new Student();
 
         Console.WriteLine("\nAdding a new student...\n");
-
-        // Check if the student ID already exists in the list of students. If it does, prompt the user to enter a different ID.
-        while (true)
-        {
-            int id = ReadIntInput("Student Id: ", 1, 9999);
-            if (students.Exists(s => s.StudentId == id))
-            {
-                Console.WriteLine("A student with this ID already exists. Please try a different ID.\n");
-            }
-            else
-            {
-                student.StudentId = id;
-                break;
-            }
-        }
 
         student.FirstName = ReadNameInput("First name: ");
         student.LastName = ReadNameInput("Last name: ");
@@ -32,11 +16,11 @@ public class StudentService
         student.GradeLevel = ReadRequiredText("Grade Level: ");
         student.Section = ReadRequiredText("Section: ");
 
-        students.Add(student);
-        Console.WriteLine("\nStudent added successfully!");
+        int newStudentId = await _studentRepository.AddStudentAsync(student);
+        Console.WriteLine($"\nStudent added successfully with ID: {newStudentId}");
     }
 
-    // The ListAll method will display all student records in a formatted manner. If there are no student records, it will inform the user accordingly.
+    // The ListAll method will retrieve all student records from the database and display them in a formatted manner. If no records are found, it will inform the user accordingly.
     public async Task ListAll()
     {
         var students = await GetAllStudentsAsync();
@@ -53,7 +37,7 @@ public class StudentService
         }
     }
 
-    // The FindById method will allow the user to search for a student by their ID. If the student is found, their details will be displayed; otherwise, a message indicating that the student was not found will be shown.
+    // The FindById method will prompt the user to enter a student ID, retrieve the corresponding student record from the database, and display the details. If the student is not found, it will inform the user accordingly.
     public async Task FindById()
     {
         int searchId = ReadIntInput("\nEnter the Student ID to search: ");
@@ -69,7 +53,7 @@ public class StudentService
         }
     }
 
-    // The UpdateStudent method will allow the user to update specific fields of a student's record. The user will be prompted to select which field they want to update, and then they can enter the new value for that field. If the student is not found, a message will be displayed.
+    // The UpdateStudent method will prompt the user to enter a student ID, retrieve the corresponding student record, and allow the user to update specific fields. After updating, it will call the repository to save the changes to the database and display a confirmation message.
     public async Task<bool> UpdateStudent()
     {
         int searchId = ReadIntInput("Enter the Student ID to search: ");
@@ -114,7 +98,6 @@ public class StudentService
                 Console.WriteLine("Failed to update student.");
                 return false;
             }
-
             Console.WriteLine("Student updated successfully.");
             return true;
         }
@@ -126,39 +109,43 @@ public class StudentService
     }
 
     // The DeleteStudent method will allow the user to delete a student's record by their ID. If the student is found, the user will be asked to confirm the deletion. If confirmed, the student will be removed from the list; otherwise, the deletion will be canceled. If the student is not found, a message will be displayed.
-    public void DeleteStudent()
+    public async Task<bool> DeleteStudent()
     {
-        if (students.Count == 0)
-        {
-            Console.WriteLine("No student records found.");
-            return;
-        }
-
         int searchId = ReadIntInput("Enter the Student ID to delete: ");
-        var student = students.Find(s => s.StudentId == searchId);
+        var student = await _studentRepository.GetStudentByIdAsync(searchId);
 
         if (student != null)
         {
             Console.Write("Are you sure you want to delete this student? (y/n): ");
             string confirm = Console.ReadLine();
 
-            if (confirm?.ToLower() == "y")
+            if (string.Equals(confirm?.Trim(), "y", StringComparison.OrdinalIgnoreCase))
             {
-                students.Remove(student);
+                bool isDeleted = await _studentRepository.DeleteStudentAsync(searchId);
+
+                if (!isDeleted)
+                {
+                    Console.WriteLine("Failed to delete student.");
+                    return false;
+                }
                 Console.WriteLine("Student deleted successfully.");
+                return true;
+
             }
             else
             {
                 Console.WriteLine("Deletion cancelled.");
+                return false;
             }
         }
         else
         {
             Console.WriteLine("Student not found.");
+            return false;
         }
     }
 
-    // The GetAllStudentsAsync method will retrieve all student records from the database asynchronously using the StudentRepository. It will return a list of Student objects.
+    // The GetAllStudentsAsync method will retrieve all student records from the database by calling the corresponding method in the StudentRepository. It returns a list of Student objects.
     public async Task<List<Student>> GetAllStudentsAsync()
     {
         return await _studentRepository.GetAllStudentsAsync();

@@ -33,7 +33,7 @@
                 switch (choice)
                 {
                     case 1:
-                        studentService.AddStudent();
+                        await studentService.AddStudent();
                         break;
                     case 2:
                         await studentService.ListAll();
@@ -45,7 +45,7 @@
                         await studentService.UpdateStudent();
                         break;
                     case 5:
-                        studentService.DeleteStudent();
+                        await studentService.DeleteStudent();
                         break;
                     case 6:
                         Console.WriteLine("Exiting program... Goodbye!");
