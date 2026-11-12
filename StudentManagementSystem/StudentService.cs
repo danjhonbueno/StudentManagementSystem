@@ -4,7 +4,7 @@ using StudentManagementSystem.Repositories;
 public class StudentService
 {
     // The AddStudent method will prompt the user to enter details for a new student, create a Student object, and then call the repository to add the student to the database. It will also display a confirmation message with the new student's ID.
-    public async Task<Student?> AddStudent()
+    public async Task<Student> AddStudent()
     {
         Student student = new Student();
 
@@ -16,17 +16,9 @@ public class StudentService
         student.GradeLevel = ReadRequiredText("Grade Level: ");
         student.Section = ReadRequiredText("Section: ");
 
-        try
-        {
             int newStudentId = await _studentRepository.AddStudentAsync(student);
-            Console.WriteLine($"\nStudent added successfully with ID: {newStudentId}");
+            student.StudentId = newStudentId;
             return student;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error adding student: {ex.Message}");
-            return null;
-        }
     }
 
     // The ListAll method will retrieve all student records from the database and display them in a formatted manner. If no records are found, it will inform the user accordingly.

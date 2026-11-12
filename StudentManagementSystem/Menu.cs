@@ -33,7 +33,16 @@
                 switch (choice)
                 {
                     case 1:
-                        await studentService.AddStudent();
+
+                        try
+                        {   
+                            Student result = await studentService.AddStudent();
+                            Console.WriteLine($"Student {result.StudentId} added successfully!");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error adding student: {ex.Message}");
+                        }
                         break;
                     case 2:
                         await studentService.ListAll();
