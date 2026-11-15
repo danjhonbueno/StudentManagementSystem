@@ -1,4 +1,7 @@
-﻿namespace StudentManagementSystem
+﻿using System;
+using System.IO;
+
+namespace StudentManagementSystem
 {
     public class Menu
     {
@@ -41,7 +44,9 @@
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Error adding student: {ex.Message}");
+                            File.AppendAllText("error_log.txt", $"[{DateTime.Now}] Error adding student: {ex.ToString()}{Environment.NewLine}");
+                            Console.WriteLine("An error occurred while adding the student. Please check the error log for more details.");
+                            Console.WriteLine($"Log file location: {Path.GetFullPath("error_log.txt")}");
                         }
                         break;
                     case 2:
