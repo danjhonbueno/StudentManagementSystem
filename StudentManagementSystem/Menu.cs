@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace StudentManagementSystem
@@ -44,9 +45,8 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            File.AppendAllText("error_log.txt", $"[{DateTime.Now}] Error adding student: {ex.ToString()}{Environment.NewLine}");
+                            LogError(ex);
                             Console.WriteLine("An error occurred while adding the student. Please check the error log for more details.");
-                            Console.WriteLine($"Log file location: {Path.GetFullPath("error_log.txt")}");
                         }
                         break;
                     case 2:
@@ -71,5 +71,13 @@ namespace StudentManagementSystem
                 }
             }
         }
+
+        private void LogError(Exception ex)
+        {
+            string logFilePath = "error_log.txt";
+            string logMessage = $"[{DateTime.Now}] {ex.ToString()}{Environment.NewLine}";
+            File.AppendAllText(logFilePath, logMessage);
+        }
     }
+    
 }
