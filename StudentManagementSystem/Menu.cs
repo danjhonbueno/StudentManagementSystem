@@ -50,16 +50,51 @@ namespace StudentManagementSystem
                         }
                         break;
                     case 2:
-                        await studentService.ListAll();
+
+                        try
+                        {
+                            await studentService.ListAll();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(ex);
+                            Console.WriteLine("An error occurred while viewing students. Please check the error log for more details.");
+                        }
                         break;
                     case 3:
-                        await studentService.FindById();
+
+                        try
+                        {
+                            await studentService.FindById();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(ex);
+                            Console.WriteLine("An error occurred while searching for the student. Please check the error log for more details.");
+                        }
                         break;
                     case 4:
-                        await studentService.UpdateStudent();
+
+                        try
+                        {
+                            await studentService.UpdateStudent();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(ex);
+                            Console.WriteLine("An error occurred while updating the student. Please check the error log for more details.");
+                        }
                         break;
                     case 5:
-                        await studentService.DeleteStudent();
+                        try
+                        {
+                            await studentService.DeleteStudent();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(ex);
+                            Console.WriteLine("An error occurred while deleting the student. Please check the error log for more details.");
+                        }
                         break;
                     case 6:
                         Console.WriteLine("Exiting program... Goodbye!");

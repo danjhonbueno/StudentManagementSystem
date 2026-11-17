@@ -118,7 +118,7 @@ public class StudentService
         if (student != null)
         {
             Console.Write("Are you sure you want to delete this student? (y/n): ");
-            string confirm = Console.ReadLine();
+            string? confirm = Console.ReadLine();
 
             if (string.Equals(confirm?.Trim(), "y", StringComparison.OrdinalIgnoreCase))
             {
@@ -184,7 +184,7 @@ public class StudentService
         while (true)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             // Check that the user didn't just press Enter on an empty line
             if (string.IsNullOrWhiteSpace(input))
@@ -202,7 +202,7 @@ public class StudentService
         while (true)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             // Check that the user didn't just press Enter on an empty line
             if (string.IsNullOrWhiteSpace(input))
