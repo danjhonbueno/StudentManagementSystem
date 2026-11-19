@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 
 namespace StudentManagementSystem
@@ -45,7 +44,7 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            LogError(ex);
+                            TryLogError(ex);
                             Console.WriteLine("An error occurred while adding the student. Please check the error log for more details.");
                         }
                         break;
@@ -57,7 +56,7 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            LogError(ex);
+                            TryLogError(ex);
                             Console.WriteLine("An error occurred while viewing students. Please check the error log for more details.");
                         }
                         break;
@@ -69,7 +68,7 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            LogError(ex);
+                            TryLogError(ex);
                             Console.WriteLine("An error occurred while searching for the student. Please check the error log for more details.");
                         }
                         break;
@@ -81,7 +80,7 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            LogError(ex);
+                            TryLogError(ex);
                             Console.WriteLine("An error occurred while updating the student. Please check the error log for more details.");
                         }
                         break;
@@ -92,7 +91,7 @@ namespace StudentManagementSystem
                         }
                         catch (Exception ex)
                         {
-                            LogError(ex);
+                            TryLogError(ex);
                             Console.WriteLine("An error occurred while deleting the student. Please check the error log for more details.");
                         }
                         break;
@@ -110,8 +109,24 @@ namespace StudentManagementSystem
         private void LogError(Exception ex)
         {
             string logFilePath = "error_log.txt";
-            string logMessage = $"[{DateTime.Now}] {ex.ToString()}{Environment.NewLine}";
+            string logMessage = $"[{DateTime.Now}] {ex}{Environment.NewLine}";
             File.AppendAllText(logFilePath, logMessage);
+        }
+
+        private void TryLogError(Exception ex)
+        {
+            try
+            {
+                LogError(ex);
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Warning: The error could not be saved to the log file.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("An unexpected error occurred while logging.");
+            }
         }
     }
     
